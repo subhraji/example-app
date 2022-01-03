@@ -26,7 +26,10 @@ class StudentController extends Controller
         ]);
 
         $student -> save();
-        return response()-> json(['message' => "registered successfully"] ,200);
+        return response()-> json([
+            "status"=>true,
+            'message' => "registered successfully"
+        ] ,200);
     }
 
 
@@ -45,12 +48,13 @@ class StudentController extends Controller
                 'data' => [],
             ],200);
         }else{
+            $token = $request->user()->createToken($request->token_name);
             return response()->json([
                 'status' => true,
                 'message' => 'Login successful',
                 'data' => [
                     'user' => Auth::user(),
-                    'token' => $request->user()->createToken('PersonalAccessToken'),
+                    'token' => $token->plainTextToken,
                     'token_type' => 'Bearer'
                 ],
             ],200);
